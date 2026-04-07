@@ -1,0 +1,202 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap');
+
+@font-face {
+  font-family: 'Octin College';
+  src: url('assets/fonts/Octin College Book.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Death Stranded';
+  src: url('assets/fonts/Death_Stranded.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'LED Dot-Matrix';
+  src: url('assets/fonts/LED Dot-Matrix.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* ---------- Base Layout ---------- */
+
+body, html {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: #e5e5e5;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 32px;
+  padding: 40px 24px;
+}
+
+.tape-wrapper {
+  width: 340px;
+  min-width: 340px;
+  background-color: #fce700;
+  position: relative;
+}
+
+/* ---------- Barcode Canvas ---------- */
+
+#barcode-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  min-height: 115px;
+  width: 100%;
+  max-width: 290px;
+  overflow: hidden;
+}
+
+#barcode-container canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+}
+
+/* ---------- Control Panel ---------- */
+
+.control-panel {
+  width: 340px;
+  min-width: 300px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 28px 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  position: sticky;
+  top: 40px;
+}
+
+.control-panel h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #111;
+  letter-spacing: -0.3px;
+}
+
+.control-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.control-section label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.control-section textarea,
+.control-section input[type="text"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+  color: #222;
+  background: #fafafa;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.control-section textarea:focus,
+.control-section input[type="text"]:focus {
+  border-color: #fce700;
+  box-shadow: 0 0 0 3px rgba(252, 231, 0, 0.25);
+}
+
+.control-section textarea {
+  min-height: 80px;
+  line-height: 1.5;
+}
+
+.input-row {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.input-row input[type="text"] {
+  flex: 1;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'Inter', system-ui, sans-serif;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  background: #fce700;
+  color: #111;
+}
+
+.btn-primary:hover {
+  background: #f0dc00;
+}
+
+.btn-secondary {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.btn-secondary:hover {
+  background: #e4e4e4;
+}
+
+.section-divider {
+  height: 1px;
+  background: #eee;
+  margin: 0;
+  border: none;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 780px) {
+  body {
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px;
+  }
+
+  .control-panel {
+    position: static;
+    width: 340px;
+  }
+}

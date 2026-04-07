@@ -5,51 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Damage Sensor Tape</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap');
-    
-    @font-face {
-      font-family: 'Octin College';
-      src: url('assets/fonts/Octin College Book.ttf') format('truetype');
-      font-weight: normal;
-      font-style: normal;
-    }
-
-    @font-face {
-      font-family: 'Death Stranded';
-      src: url('assets/fonts/Death_Stranded.otf') format('opentype');
-      font-weight: normal;
-      font-style: normal;
-    }
-
-    @font-face {
-      font-family: 'LED Dot-Matrix';
-      src: url('assets/fonts/LED Dot-Matrix.ttf') format('truetype');
-      font-weight: normal;
-      font-style: normal;
-    }
-
-    body, html {
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      background-color: #e5e5e5;
-    }
-
-    /* Set up a fixed width container that simulates the tape width */
-    .tape-wrapper {
-      width: 340px;
-      background-color: #fce700;
-      position: relative;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
+  <!-- Tape Preview -->
   <div class="tape-wrapper content-stretch flex flex-col items-center justify-between px-[25px] py-[152px] relative">
-    
+
     <!-- Top Section -->
     <div class="content-stretch flex flex-col gap-[36px] items-center relative shrink-0 w-full mb-[250px]">
       <div class="content-stretch flex flex-col gap-[12px] items-center relative shrink-0 w-full">
@@ -59,11 +21,11 @@
           </p>
         </div>
         <div class="font-['Octin_College'] leading-[0] not-italic relative shrink-0 text-[#0f0f0f] text-[10px] tracking-[1px] w-[260px] whitespace-pre-wrap">
-          <p class="leading-[11px] mb-0">THE SENSOR IS ALWAYS ACTIVE AND WILL INSTANTLY DEVELOP COLOR IF DAMAGE IS RECEIVED. </p>
-          <p class="leading-[11px] mb-0">MATCH THE TAPE'S COLOR WITH THE REFERENCE CHART TO ESTIMATE DAMAGE. </p>
-          <p class="leading-[11px] mb-0">TO EXTEND THE SERVICE LIFE KEEP COLD</p>
-          <p class="leading-[11px] mb-0">WHEN NOT IN USE. </p>
-          <p class="leading-[11px] mb-0">AVOID PROLONGED EXPOSURE TO HEAT AND SUNLIGHT.</p>
+          <p id="desc-line-0" class="leading-[11px] mb-0"></p>
+          <p id="desc-line-1" class="leading-[11px] mb-0"></p>
+          <p id="desc-line-2" class="leading-[11px] mb-0"></p>
+          <p id="desc-line-3" class="leading-[11px] mb-0"></p>
+          <p id="desc-line-4" class="leading-[11px] mb-0"></p>
         </div>
       </div>
 
@@ -80,22 +42,20 @@
           </div>
           <div class="content-stretch flex flex-col font-['Arial'] gap-px items-start leading-[normal] not-italic relative shrink-0 text-[#0f0f0f] text-[10px] tracking-[3px] w-[121px] whitespace-nowrap">
             <p class="relative shrink-0 m-0">SAFETEST MARK</p>
-            <p class="relative shrink-0 m-0">19879494 3803</p>
+            <p class="relative shrink-0 m-0"><span id="serial-number"></span></p>
           </div>
         </div>
-        
-        <div class="bg-black h-[115px] shrink-0 w-full max-w-[290px]"></div>
-        
-        <p class="font-['LED_Dot-Matrix'] leading-[43px] not-italic relative shrink-0 text-[#0f0f0f] text-[46px] m-0 text-center">
-          882809S7IB
-        </p>
+
+        <div id="barcode-container"></div>
+
+        <p id="led-code" class="font-['LED_Dot-Matrix'] leading-[43px] not-italic relative shrink-0 text-[#0f0f0f] text-[46px] m-0 text-center"></p>
       </div>
     </div>
 
     <!-- Bottom Section -->
     <div class="content-stretch flex gap-[17px] items-start justify-center relative shrink-0 w-full overflow-visible">
       <div class="content-stretch flex flex-col gap-[34px] items-center relative shrink-0 w-[56px]">
-        
+
         <div class="flex items-center justify-center relative shrink-0 w-[56px]">
           <p class="font-['Death_Stranded'] [writing-mode:vertical-rl] leading-[normal] not-italic relative text-[#0f0f0f] text-[62px] tracking-[3px] whitespace-nowrap m-0">
             Do not paint over or remove label
@@ -106,7 +66,7 @@
           <div class="h-[38px] relative shrink-0 w-[35px]">
             <img alt="Polygon" class="absolute block w-full h-full" src="assets/polygon.svg" />
           </div>
-          
+
           <div class="flex items-center justify-center relative shrink-0 w-[45px]">
             <p class="font-['Inter'] font-semibold [writing-mode:vertical-rl] leading-[normal] not-italic relative text-[#0f0f0f] text-[12px] h-[495px] m-0">
               EXPIRES ONE YEAR FROM THE DATE OF APPLICATION. NON-AUTHENTIC SENSOR TAPE MAY NOT BE RELIABLE.MAKE SURE TO PROPERLY ID AND TAG ALL SEALED SHIPMENTS. TAPE WILL DETERIORATE WHEN EXPOSED TO T.F.
@@ -121,8 +81,56 @@
         </p>
       </div>
     </div>
-    
+
   </div>
+
+  <!-- Control Panel -->
+  <div class="control-panel">
+    <h2>Customize Tape</h2>
+
+    <div class="control-section">
+      <label for="barcode-input">Barcode Text</label>
+      <textarea id="barcode-input" rows="4" placeholder="Text to encode as PDF417 barcode…"></textarea>
+      <button id="barcode-random-btn" class="btn btn-primary" type="button">Random Poem</button>
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="control-section">
+      <label for="desc-input">Description Text</label>
+      <textarea id="desc-input" rows="5" placeholder="5 lines of description text…"></textarea>
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="control-section">
+      <label for="serial-input">Serial Number</label>
+      <div class="input-row">
+        <input id="serial-input" type="text" placeholder="XXXXXXXX XXXX">
+        <button id="serial-random-btn" class="btn btn-secondary" type="button">Random</button>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="control-section">
+      <label for="led-input">LED Code</label>
+      <div class="input-row">
+        <input id="led-input" type="text" placeholder="10-char code" maxlength="10">
+        <button id="led-random-btn" class="btn btn-secondary" type="button">Random</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vendor (must load before app code) -->
+  <script src="assets/js/bcmath-min.js"></script>
+  <script src="assets/js/pdf417-min.js"></script>
+
+  <!-- App modules -->
+  <script src="js/poem-data.js"></script>
+  <script src="js/barcode.js"></script>
+  <script src="js/controls.js"></script>
+  <script src="js/app.js"></script>
 
 </body>
 </html>
