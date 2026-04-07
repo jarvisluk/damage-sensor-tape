@@ -39,6 +39,9 @@
     window.updateBarcode(excerpt);
 
     window.initControls();
+    if (window.initExport) {
+      window.initExport();
+    }
   }
 
   document.addEventListener("DOMContentLoaded", init);

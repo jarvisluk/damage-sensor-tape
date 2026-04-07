@@ -57,7 +57,12 @@
     }
   }
 
+  function updateTapeColor(color) {
+    document.documentElement.style.setProperty("--tape-color", color);
+  }
+
   function initControls() {
+    var swatches = document.querySelectorAll(".color-swatch");
     var barcodeInput = document.getElementById("barcode-input");
     var barcodeRandomBtn = document.getElementById("barcode-random-btn");
     var descInput = document.getElementById("desc-input");
@@ -65,6 +70,14 @@
     var serialRandomBtn = document.getElementById("serial-random-btn");
     var ledInput = document.getElementById("led-input");
     var ledRandomBtn = document.getElementById("led-random-btn");
+
+    swatches.forEach(function (swatch) {
+      swatch.addEventListener("click", function () {
+        swatches.forEach(function (s) { s.classList.remove("active"); });
+        swatch.classList.add("active");
+        updateTapeColor(swatch.getAttribute("data-color"));
+      });
+    });
 
     if (barcodeInput) {
       barcodeInput.addEventListener("input", function () {

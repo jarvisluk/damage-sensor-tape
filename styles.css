@@ -15,10 +15,16 @@
 }
 
 @font-face {
-  font-family: 'LED Dot-Matrix';
-  src: url('assets/fonts/LED Dot-Matrix.ttf') format('truetype');
+  font-family: 'JD LCD Rounded';
+  src: url('assets/fonts/JD-LCD-Rounded.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
+}
+
+/* ---------- Theme ---------- */
+
+:root {
+  --tape-color: #fce700;
 }
 
 /* ---------- Base Layout ---------- */
@@ -41,7 +47,7 @@ body {
 .tape-wrapper {
   width: 340px;
   min-width: 340px;
-  background-color: #fce700;
+  background-color: var(--tape-color);
   position: relative;
 }
 
@@ -51,8 +57,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #000;
-  min-height: 115px;
+  background: transparent;
+  height: 115px;
   width: 100%;
   max-width: 290px;
   overflow: hidden;
@@ -61,7 +67,7 @@ body {
 #barcode-container canvas {
   display: block;
   width: 100%;
-  height: auto;
+  height: 115px;
   image-rendering: pixelated;
 }
 
@@ -122,8 +128,8 @@ body {
 
 .control-section textarea:focus,
 .control-section input[type="text"]:focus {
-  border-color: #fce700;
-  box-shadow: 0 0 0 3px rgba(252, 231, 0, 0.25);
+  border-color: var(--tape-color);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--tape-color) 25%, transparent);
 }
 
 .control-section textarea {
@@ -162,12 +168,12 @@ body {
 }
 
 .btn-primary {
-  background: #fce700;
+  background: var(--tape-color);
   color: #111;
 }
 
 .btn-primary:hover {
-  background: #f0dc00;
+  background: color-mix(in srgb, var(--tape-color) 90%, #000);
 }
 
 .btn-secondary {
@@ -184,6 +190,60 @@ body {
   background: #eee;
   margin: 0;
   border: none;
+}
+
+.export-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.export-actions .btn {
+  flex: 1;
+}
+
+.btn[disabled] {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.control-hint {
+  min-height: 18px;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #666;
+}
+
+.control-hint.error {
+  color: #b42318;
+}
+
+/* ---------- Tape Color Picker ---------- */
+
+.color-swatches {
+  display: flex;
+  gap: 8px;
+}
+
+.color-swatch {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.1s;
+  outline: none;
+  padding: 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+
+.color-swatch:hover {
+  transform: scale(1.1);
+}
+
+.color-swatch.active {
+  border-color: #111;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #111;
 }
 
 /* ---------- Responsive ---------- */

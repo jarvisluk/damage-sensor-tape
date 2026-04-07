@@ -1,20 +1,19 @@
 (function () {
-  var DEFAULT_MAX_WIDTH = 290;
-
-  function clearContainer(containerEl) {
-    while (containerEl.firstChild) {
-      containerEl.removeChild(containerEl.firstChild);
-    }
-  }
-
-  function getContainerWidth(containerEl) {
-    var measuredWidth = Math.floor(containerEl.clientWidth || 0);
-
-    if (measuredWidth > 0) {
-      return measuredWidth;
+  function replaceContainerContent(containerEl, childNode) {
+    if (typeof containerEl.replaceChildren === "function") {
+      if (childNode) {
+        containerEl.replaceChildren(childNode);
+      } else {
+        containerEl.replaceChildren();
+      }
+      return;
     }
 
-    return DEFAULT_MAX_WIDTH;
+    containerEl.textContent = "";
+
+    if (childNode) {
+      containerEl.appendChild(childNode);
+    }
   }
 
   function drawBarcodeToCanvas(canvas, barcode) {
@@ -24,13 +23,16 @@
     var rowIndex;
     var colIndex;
     var row;
+    var cellValue;
+
+    if (!context) {
+      throw new Error("Failed to acquire 2D canvas context.");
+    }
 
     canvas.width = cols;
     canvas.height = rows;
 
     context.clearRect(0, 0, cols, rows);
-    context.fillStyle = "#ffffff";
-    context.fillRect(0, 0, cols, rows);
     context.fillStyle = "#000000";
 
     for (rowIndex = 0; rowIndex < rows; rowIndex += 1) {
@@ -41,7 +43,9 @@
       }
 
       for (colIndex = 0; colIndex < cols; colIndex += 1) {
-        if (Number(row[colIndex]) === 1) {
+        cellValue = row[colIndex];
+
+        if (cellValue === 1 || cellValue === "1") {
           context.fillRect(colIndex, rowIndex, 1, 1);
         }
       }
@@ -52,17 +56,13 @@
     var safeText = typeof text === "string" ? text.trim() : "";
     var canvas;
     var barcode;
-    var maxWidth;
-    var targetWidth;
-    var targetHeight;
 
     if (!containerEl) {
       return null;
     }
 
-    clearContainer(containerEl);
-
     if (!safeText) {
+      replaceContainerContent(containerEl);
       return null;
     }
 
@@ -79,18 +79,7 @@
 
     canvas = document.createElement("canvas");
     drawBarcodeToCanvas(canvas, barcode);
-
-    maxWidth = Math.min(DEFAULT_MAX_WIDTH, getContainerWidth(containerEl));
-    targetWidth = Math.max(1, maxWidth);
-    targetHeight = Math.max(
-      1,
-      Math.round((barcode.num_rows / barcode.num_cols) * targetWidth)
-    );
-
-    canvas.style.width = targetWidth + "px";
-    canvas.style.height = targetHeight + "px";
-
-    containerEl.appendChild(canvas);
+    replaceContainerContent(containerEl, canvas);
 
     return canvas;
   }

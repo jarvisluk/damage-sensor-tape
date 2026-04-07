@@ -10,7 +10,7 @@
 <body>
 
   <!-- Tape Preview -->
-  <div class="tape-wrapper content-stretch flex flex-col items-center justify-between px-[25px] py-[152px] relative">
+  <div id="tape-preview" class="tape-wrapper content-stretch flex flex-col items-center justify-between px-[25px] py-[152px] relative">
 
     <!-- Top Section -->
     <div class="content-stretch flex flex-col gap-[36px] items-center relative shrink-0 w-full mb-[250px]">
@@ -20,7 +20,7 @@
             BENCHMARKER
           </p>
         </div>
-        <div class="font-['Octin_College'] leading-[0] not-italic relative shrink-0 text-[#0f0f0f] text-[10px] tracking-[1px] w-[260px] whitespace-pre-wrap">
+        <div class="font-['Octin_College'] leading-[0] not-italic relative shrink-0 text-[#0f0f0f] text-[10px] tracking-[1px] w-[280px] whitespace-pre-wrap">
           <p id="desc-line-0" class="leading-[11px] mb-0"></p>
           <p id="desc-line-1" class="leading-[11px] mb-0"></p>
           <p id="desc-line-2" class="leading-[11px] mb-0"></p>
@@ -36,7 +36,7 @@
       </div>
 
       <div class="content-stretch flex flex-col gap-[10px] items-center relative shrink-0 w-full mt-[10px]">
-        <div class="content-stretch flex gap-[8px] items-center justify-start relative shrink-0 w-[260px]">
+        <div class="content-stretch flex gap-[8px] items-center justify-start relative shrink-0 w-[280px]">
           <div class="h-[21px] relative shrink-0 w-[24px]">
             <img alt="Subtract" class="absolute block w-full h-full" src="assets/subtract.svg" />
           </div>
@@ -48,7 +48,7 @@
 
         <div id="barcode-container"></div>
 
-        <p id="led-code" class="font-['LED_Dot-Matrix'] leading-[43px] not-italic relative shrink-0 text-[#0f0f0f] text-[46px] m-0 text-center"></p>
+        <p id="led-code" class="font-['JD_LCD_Rounded'] leading-[normal] not-italic relative shrink-0 text-[#0f0f0f] text-[76px] tracking-[0.5px] m-0 text-center min-w-full w-min"></p>
       </div>
     </div>
 
@@ -89,6 +89,18 @@
     <h2>Customize Tape</h2>
 
     <div class="control-section">
+      <label>Tape Color</label>
+      <div class="color-swatches">
+        <button class="color-swatch active" type="button" data-color="#FCE700" style="background:#FCE700" aria-label="Yellow"></button>
+        <button class="color-swatch" type="button" data-color="#FC0015" style="background:#FC0015" aria-label="Red"></button>
+        <button class="color-swatch" type="button" data-color="#FC6900" style="background:#FC6900" aria-label="Orange"></button>
+        <button class="color-swatch" type="button" data-color="#542A2E" style="background:#542A2E" aria-label="Dark Brown"></button>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="control-section">
       <label for="barcode-input">Barcode Text</label>
       <textarea id="barcode-input" rows="4" placeholder="Text to encode as PDF417 barcode…"></textarea>
       <button id="barcode-random-btn" class="btn btn-primary" type="button">Random Poem</button>
@@ -120,16 +132,31 @@
         <button id="led-random-btn" class="btn btn-secondary" type="button">Random</button>
       </div>
     </div>
+
+    <hr class="section-divider">
+
+    <div class="control-section">
+      <label>Export Tape</label>
+      <div class="export-actions">
+        <button id="export-png-btn" class="btn btn-primary" type="button">Save PNG</button>
+        <button id="export-svg-btn" class="btn btn-secondary" type="button">Save SVG</button>
+        <button id="export-pdf-btn" class="btn btn-secondary" type="button">Save PDF</button>
+      </div>
+      <p id="export-status" class="control-hint" aria-live="polite"></p>
+    </div>
   </div>
 
   <!-- Vendor (must load before app code) -->
   <script src="assets/js/bcmath-min.js"></script>
   <script src="assets/js/pdf417-min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 
   <!-- App modules -->
   <script src="js/poem-data.js"></script>
   <script src="js/barcode.js"></script>
   <script src="js/controls.js"></script>
+  <script src="js/export.js"></script>
   <script src="js/app.js"></script>
 
 </body>
