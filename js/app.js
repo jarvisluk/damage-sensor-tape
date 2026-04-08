@@ -9,12 +9,15 @@
 
   var DEFAULT_SERIAL = "19879494 3803";
   var DEFAULT_LED_CODE = "882809S7IB";
+  var DEFAULT_BLEED_SIZE_MM = "3";
 
   function init() {
     var descInput = document.getElementById("desc-input");
     var serialInput = document.getElementById("serial-input");
     var ledInput = document.getElementById("led-input");
     var barcodeInput = document.getElementById("barcode-input");
+    var bleedEnabledInput = document.getElementById("bleed-enabled");
+    var bleedSizeInput = document.getElementById("bleed-size-input");
 
     var descText = DEFAULT_DESCRIPTION.join("\n");
     if (descInput) {
@@ -37,6 +40,14 @@
       barcodeInput.value = excerpt;
     }
     window.updateBarcode(excerpt);
+
+    if (bleedEnabledInput) {
+      bleedEnabledInput.checked = false;
+    }
+
+    if (bleedSizeInput) {
+      bleedSizeInput.value = DEFAULT_BLEED_SIZE_MM;
+    }
 
     window.initControls();
     if (window.initExport) {

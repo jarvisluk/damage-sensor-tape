@@ -25,6 +25,7 @@
 
 :root {
   --tape-color: #fce700;
+  --bleed-size: 0mm;
 }
 
 /* ---------- Base Layout ---------- */
@@ -59,6 +60,12 @@ body {
   position: relative;
 }
 
+.preview-stage {
+  padding: var(--bleed-size);
+  background-color: var(--tape-color);
+  flex: 0 0 auto;
+}
+
 /* ---------- Barcode Canvas ---------- */
 
 #barcode-container {
@@ -72,7 +79,8 @@ body {
   overflow: hidden;
 }
 
-#barcode-container canvas {
+#barcode-container canvas,
+#barcode-container svg {
   display: block;
   width: 100%;
   height: 115px;
@@ -117,7 +125,8 @@ body {
 }
 
 .control-section textarea,
-.control-section input[type="text"] {
+.control-section input[type="text"],
+.control-section input[type="number"] {
   width: 100%;
   padding: 10px 12px;
   border: 1px solid #ddd;
@@ -133,7 +142,8 @@ body {
 }
 
 .control-section textarea:focus,
-.control-section input[type="text"]:focus {
+.control-section input[type="text"]:focus,
+.control-section input[type="number"]:focus {
   border-color: var(--tape-color);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--tape-color) 25%, transparent);
 }
@@ -151,6 +161,45 @@ body {
 
 .input-row input[type="text"] {
   flex: 1;
+}
+
+.input-row input[type="number"] {
+  flex: 1;
+}
+
+.checkbox-row {
+  display: flex;
+}
+
+.checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #333;
+  text-transform: none;
+  letter-spacing: 0;
+  cursor: pointer;
+}
+
+.checkbox-label input {
+  margin: 0;
+}
+
+.input-suffix {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 52px;
+  padding: 0 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #f5f5f5;
+  color: #555;
+  font-size: 13px;
+  font-weight: 600;
+  box-sizing: border-box;
 }
 
 .btn {

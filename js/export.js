@@ -4,7 +4,7 @@
   var isExporting = false;
 
   function getTapeNode() {
-    return document.getElementById("tape-preview");
+    return document.getElementById("preview-stage") || document.getElementById("tape-preview");
   }
 
   function getStatusNode() {
