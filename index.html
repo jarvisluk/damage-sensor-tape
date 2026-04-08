@@ -10,6 +10,7 @@
 <body>
   <main class="main-layout">
     <!-- Tape Preview -->
+  <div id="preview-stage" class="preview-stage">
   <div id="tape-preview" class="tape-wrapper content-stretch flex flex-col items-center justify-between px-[25px] py-[152px] relative">
 
     <!-- Top Section -->
@@ -83,6 +84,7 @@
     </div>
 
   </div>
+  </div>
 
   <!-- Control Panel -->
   <div class="control-panel">
@@ -130,6 +132,22 @@
       <div class="input-row">
         <input id="led-input" type="text" placeholder="10-char code" maxlength="10">
         <button id="led-random-btn" class="btn btn-secondary" type="button">Random</button>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="control-section">
+      <label>Bleed</label>
+      <div class="checkbox-row">
+        <label class="checkbox-label" for="bleed-enabled">
+          <input id="bleed-enabled" type="checkbox">
+          <span>Include bleed in export</span>
+        </label>
+      </div>
+      <div class="input-row">
+        <input id="bleed-size-input" type="number" min="0" step="0.1" value="3" inputmode="decimal">
+        <span class="input-suffix">mm</span>
       </div>
     </div>
 

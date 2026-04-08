@@ -16,24 +16,30 @@
     }
   }
 
-  function drawBarcodeToCanvas(canvas, barcode) {
-    var context = canvas.getContext("2d");
+  function createSvgNode(tagName) {
+    return document.createElementNS("http://www.w3.org/2000/svg", tagName);
+  }
+
+  function createBarcodeSvg(barcode) {
+    var svg = createSvgNode("svg");
     var rows = barcode.num_rows;
     var cols = barcode.num_cols;
     var rowIndex;
     var colIndex;
     var row;
     var cellValue;
+    var path = createSvgNode("path");
+    var pathData = [];
+    var runStart;
+    var runLength;
 
-    if (!context) {
-      throw new Error("Failed to acquire 2D canvas context.");
-    }
-
-    canvas.width = cols;
-    canvas.height = rows;
-
-    context.clearRect(0, 0, cols, rows);
-    context.fillStyle = "#000000";
+    svg.setAttribute("viewBox", "0 0 " + cols + " " + rows);
+    svg.setAttribute("width", String(cols));
+    svg.setAttribute("height", String(rows));
+    svg.setAttribute("preserveAspectRatio", "none");
+    svg.setAttribute("role", "img");
+    svg.setAttribute("aria-label", "PDF417 barcode");
+    svg.setAttribute("shape-rendering", "crispEdges");
 
     for (rowIndex = 0; rowIndex < rows; rowIndex += 1) {
       row = barcode.bcode[rowIndex];
@@ -45,16 +51,32 @@
       for (colIndex = 0; colIndex < cols; colIndex += 1) {
         cellValue = row[colIndex];
 
-        if (cellValue === 1 || cellValue === "1") {
-          context.fillRect(colIndex, rowIndex, 1, 1);
+        if (cellValue !== 1 && cellValue !== "1") {
+          continue;
         }
+
+        runStart = colIndex;
+        runLength = 1;
+
+        while (colIndex + 1 < cols && (row[colIndex + 1] === 1 || row[colIndex + 1] === "1")) {
+          colIndex += 1;
+          runLength += 1;
+        }
+
+        pathData.push("M" + runStart + " " + rowIndex + "h" + runLength + "v1H" + runStart + "Z");
       }
     }
+
+    path.setAttribute("d", pathData.join(""));
+    path.setAttribute("fill", "#000000");
+    svg.appendChild(path);
+
+    return svg;
   }
 
   function renderBarcode(containerEl, text) {
     var safeText = typeof text === "string" ? text.trim() : "";
-    var canvas;
+    var svg;
     var barcode;
 
     if (!containerEl) {
@@ -77,11 +99,10 @@
       throw new Error("Failed to generate PDF417 barcode data.");
     }
 
-    canvas = document.createElement("canvas");
-    drawBarcodeToCanvas(canvas, barcode);
-    replaceContainerContent(containerEl, canvas);
+    svg = createBarcodeSvg(barcode);
+    replaceContainerContent(containerEl, svg);
 
-    return canvas;
+    return svg;
   }
 
   window.renderBarcode = renderBarcode;

@@ -61,6 +61,22 @@
     document.documentElement.style.setProperty("--tape-color", color);
   }
 
+  function parseBleedSizeMm(value) {
+    var bleed = parseFloat(value);
+
+    if (!isFinite(bleed) || bleed < 0) {
+      return 0;
+    }
+
+    return bleed;
+  }
+
+  function updateBleed(enabled, sizeMm) {
+    var bleedValue = enabled ? parseBleedSizeMm(sizeMm) : 0;
+
+    document.documentElement.style.setProperty("--bleed-size", bleedValue + "mm");
+  }
+
   function initControls() {
     var swatches = document.querySelectorAll(".color-swatch");
     var barcodeInput = document.getElementById("barcode-input");
@@ -70,6 +86,19 @@
     var serialRandomBtn = document.getElementById("serial-random-btn");
     var ledInput = document.getElementById("led-input");
     var ledRandomBtn = document.getElementById("led-random-btn");
+    var bleedEnabledInput = document.getElementById("bleed-enabled");
+    var bleedSizeInput = document.getElementById("bleed-size-input");
+
+    function syncBleedControls() {
+      var enabled = bleedEnabledInput ? bleedEnabledInput.checked : false;
+      var sizeValue = bleedSizeInput ? bleedSizeInput.value : 0;
+
+      if (bleedSizeInput) {
+        bleedSizeInput.disabled = !enabled;
+      }
+
+      updateBleed(enabled, sizeValue);
+    }
 
     swatches.forEach(function (swatch) {
       swatch.addEventListener("click", function () {
@@ -132,6 +161,16 @@
         updateLedCode(code);
       });
     }
+
+    if (bleedEnabledInput) {
+      bleedEnabledInput.addEventListener("change", syncBleedControls);
+    }
+
+    if (bleedSizeInput) {
+      bleedSizeInput.addEventListener("input", syncBleedControls);
+    }
+
+    syncBleedControls();
   }
 
   window.generateRandomSerial = generateRandomSerial;
@@ -140,5 +179,6 @@
   window.updateSerial = updateSerial;
   window.updateLedCode = updateLedCode;
   window.updateBarcode = updateBarcode;
+  window.updateBleed = updateBleed;
   window.initControls = initControls;
 })();
