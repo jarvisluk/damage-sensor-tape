@@ -92,8 +92,6 @@ body {
   flex-direction: column;
   gap: 24px;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  position: sticky;
-  top: 40px;
 }
 
 .control-panel h2 {
@@ -293,7 +291,6 @@ body {
   }
 
   .control-panel {
-    position: static;
     width: 340px;
   }
 }
