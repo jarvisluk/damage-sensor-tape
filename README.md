@@ -6,7 +6,9 @@ Pages demo: [https://damage-sensor-tape.pages.dev/](https://damage-sensor-tape.p
 
 A web-based generator for the "damage sensor tape" from Death Stranding. The tool renders a live tape preview faithful to the in-game design, with customizable tape color, description text, serial number, LED code, and a PDF417 barcode that encodes random poem excerpts.
 
-Users can tweak every detail through the side control panel and export the final design as PNG, SVG, or PDF. The project runs entirely in the browser with no build step — just open [Cloudflare Pages](https://damage-sensor-tape.pages.dev/).
+Users can tweak every detail through the side control panel and export the final design as PNG, SVG, or PDF. The project runs entirely in the browser with no build step.
+
+Production is deployed on [Cloudflare Pages](https://damage-sensor-tape.pages.dev/) through the repository's native Git integration.
 
 ## License
 
