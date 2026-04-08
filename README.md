@@ -1,0 +1,9 @@
+# Damage Sensor Tape
+
+A web-based generator for the "damage sensor tape" from Death Stranding. The tool renders a live tape preview faithful to the in-game design, with customizable tape color, description text, serial number, LED code, and a PDF417 barcode that encodes random poem excerpts.
+
+Users can tweak every detail through the side control panel and export the final design as PNG, SVG, or PDF. The project runs entirely in the browser with no build step — just open `index.html`.
+
+## License
+
+The source code is released under the [MIT License](LICENSE). "Death Stranding" and its visual designs are trademarks and/or copyrights of Kojima Productions Co., Ltd. This is an unofficial fan project and is not affiliated with or endorsed by Kojima Productions or Sony Interactive Entertainment.
