@@ -226,6 +226,35 @@ body {
   color: #b42318;
 }
 
+.external-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fafafa;
+  color: #111;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+}
+
+.external-link:hover {
+  background: #f0f0f0;
+  border-color: #cfcfcf;
+}
+
+.external-link:active {
+  transform: scale(0.98);
+}
+
+.external-link:focus-visible {
+  outline: 2px solid var(--tape-color);
+  outline-offset: 2px;
+}
+
 /* ---------- Tape Color Picker ---------- */
 
 .color-swatches {
