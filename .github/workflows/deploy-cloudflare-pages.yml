@@ -1,0 +1,43 @@
+# Deploy static site root to Cloudflare Pages on every push to main.
+# Alternative to Dashboard "Connect to Git": same outcome (production branch auto-deploy).
+#
+# One-time Cloudflare setup:
+#   1. Create API token: Account → API Tokens → Edit Cloudflare Workers (or custom with Pages:Edit).
+#   2. Repo → Settings → Secrets → CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID.
+#   3. First run: ensure project exists, e.g. `npx wrangler@latest pages project create damage-sensor-tape`
+#
+# Dashboard Git integration (if you prefer): Workers & Pages → Create → Pages → Connect to Git —
+# Production branch: main, Build command: (empty), Build output directory: /  (repo root)
+
+name: Deploy Cloudflare Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Stage static site (exclude repo metadata)
+        run: |
+          mkdir -p publish
+          cp index.html styles.css _headers publish/
+          cp -R assets js publish/
+
+      - name: Publish to Cloudflare Pages
+        id: pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy publish --project-name=damage-sensor-tape --branch=main
+
+      - name: Print deployment URL
+        run: echo "${{ steps.pages.outputs.deployment-url }}"
