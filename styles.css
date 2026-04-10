@@ -2,7 +2,7 @@
 
 @font-face {
   font-family: 'Octin College';
-  src: url('assets/fonts/Octin College Book.ttf') format('truetype');
+  src: url('assets/fonts/Octin-College-Book.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
 }
@@ -16,7 +16,7 @@
 
 @font-face {
   font-family: 'JD LCD Rounded';
-  src: url('assets/fonts/JD-LCD-Rounded.ttf') format('truetype');
+  src: url('assets/fonts/JD-LCD-Rounded.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
 }
