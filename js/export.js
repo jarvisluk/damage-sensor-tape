@@ -1,5 +1,6 @@
 (function () {
-  var EXPORT_PIXEL_RATIO = 3;
+  var EXPORT_PPI = 300;
+  var CSS_REFERENCE_PPI = 96;
   var exportButtons = [];
   var isExporting = false;
 
@@ -53,6 +54,19 @@
     document.body.removeChild(link);
   }
 
+  function downloadText(text, filename, mimeType) {
+    var blob = new Blob([text], { type: mimeType });
+    var url = URL.createObjectURL(blob);
+
+    try {
+      downloadUrl(url, filename);
+    } finally {
+      setTimeout(function () {
+        URL.revokeObjectURL(url);
+      }, 0);
+    }
+  }
+
   function getExportSize(node) {
     return {
       width: Math.round(node.offsetWidth || node.clientWidth || 340),
@@ -67,7 +81,7 @@
     return {
       backgroundColor: backgroundColor,
       cacheBust: true,
-      pixelRatio: EXPORT_PIXEL_RATIO,
+      pixelRatio: EXPORT_PPI / CSS_REFERENCE_PPI,
       width: size.width,
       height: size.height
     };
@@ -83,6 +97,50 @@
     if (!window.jspdf || !window.jspdf.jsPDF) {
       throw new Error("jsPDF failed to load.");
     }
+  }
+
+  function ensureSvg2Pdf() {
+    if (
+      !window.svg2pdf &&
+      !(window.jspdf && window.jspdf.jsPDF && window.jspdf.jsPDF.API && window.jspdf.jsPDF.API.svg)
+    ) {
+      throw new Error("svg2pdf.js failed to load.");
+    }
+  }
+
+  function ensureVectorExport() {
+    if (!window.buildVectorTapeSvg || !window.serializeVectorSvg) {
+      throw new Error("Vector export renderer failed to load.");
+    }
+  }
+
+  function renderSvgToPdf(svg, pdf, size) {
+    if (typeof pdf.svg === "function") {
+      return pdf.svg(svg, {
+        x: 0,
+        y: 0,
+        width: size.width,
+        height: size.height
+      });
+    }
+
+    if (window.svg2pdf && typeof window.svg2pdf.svg2pdf === "function") {
+      return window.svg2pdf.svg2pdf(svg, pdf, {
+        xOffset: 0,
+        yOffset: 0,
+        scale: 1
+      });
+    }
+
+    if (typeof window.svg2pdf === "function") {
+      return window.svg2pdf(svg, pdf, {
+        xOffset: 0,
+        yOffset: 0,
+        scale: 1
+      });
+    }
+
+    throw new Error("svg2pdf.js failed to load.");
   }
 
   function waitForFonts() {
@@ -108,38 +166,39 @@
 
   async function exportSvg() {
     var node = getTapeNode();
-    var dataUrl;
+    var svg;
 
     if (!node) {
       throw new Error("Tape preview was not found.");
     }
 
-    ensureHtmlToImage();
-    dataUrl = await window.htmlToImage.toSvg(node, getExportOptions(node));
-    downloadUrl(dataUrl, buildFilename("svg"));
+    ensureVectorExport();
+    svg = await window.buildVectorTapeSvg(node);
+    downloadText(window.serializeVectorSvg(svg), buildFilename("svg"), "image/svg+xml;charset=utf-8");
   }
 
   async function exportPdf() {
     var node = getTapeNode();
     var size;
-    var pngDataUrl;
+    var svg;
     var pdf;
 
     if (!node) {
       throw new Error("Tape preview was not found.");
     }
 
-    ensureHtmlToImage();
     ensureJsPdf();
+    ensureSvg2Pdf();
+    ensureVectorExport();
     size = getExportSize(node);
-    pngDataUrl = await window.htmlToImage.toPng(node, getExportOptions(node));
+    svg = await window.buildVectorTapeSvg(node);
     pdf = new window.jspdf.jsPDF({
       orientation: size.height >= size.width ? "portrait" : "landscape",
       unit: "px",
       format: [size.width, size.height]
     });
 
-    pdf.addImage(pngDataUrl, "PNG", 0, 0, size.width, size.height, undefined, "FAST");
+    await renderSvgToPdf(svg, pdf, size);
     pdf.save(buildFilename("pdf"));
   }
 
