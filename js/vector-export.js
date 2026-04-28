@@ -93,6 +93,92 @@
     return parseNumber(computedStyle.letterSpacing, 0);
   }
 
+  function getLineHeight(computedStyle, fontSize) {
+    if (!computedStyle.lineHeight || computedStyle.lineHeight === "normal") {
+      return fontSize * 1.2;
+    }
+
+    return parseNumber(computedStyle.lineHeight, fontSize * 1.2);
+  }
+
+  function splitLongToken(token, measureText, maxWidth) {
+    var lines = [];
+    var currentLine = "";
+    var candidate;
+
+    Array.prototype.forEach.call(token, function (character) {
+      candidate = currentLine + character;
+
+      if (currentLine && measureText(candidate) > maxWidth) {
+        lines.push(currentLine);
+        currentLine = character;
+      } else {
+        currentLine = candidate;
+      }
+    });
+
+    if (currentLine) {
+      lines.push(currentLine);
+    }
+
+    return lines;
+  }
+
+  function wrapText(text, measureText, maxWidth) {
+    var words = text.replace(/\s+/g, " ").trim().split(" ");
+    var lines = [];
+    var currentLine = "";
+    var candidate;
+    var longTokenLines;
+
+    if (!text.trim() || !maxWidth) {
+      return text ? [text] : [];
+    }
+
+    words.forEach(function (word) {
+      candidate = currentLine ? currentLine + " " + word : word;
+
+      if (measureText(candidate) <= maxWidth) {
+        currentLine = candidate;
+        return;
+      }
+
+      if (currentLine) {
+        lines.push(currentLine);
+        currentLine = "";
+      }
+
+      if (measureText(word) <= maxWidth) {
+        currentLine = word;
+        return;
+      }
+
+      longTokenLines = splitLongToken(word, measureText, maxWidth);
+      lines = lines.concat(longTokenLines.slice(0, -1));
+      currentLine = longTokenLines[longTokenLines.length - 1] || "";
+    });
+
+    if (currentLine) {
+      lines.push(currentLine);
+    }
+
+    return lines;
+  }
+
+  function getAlignedLineX(rect, lineWidth, computedStyle) {
+    var textAlign = computedStyle.textAlign || "start";
+
+    if (textAlign === "center") {
+      return rect.x + (rect.width - lineWidth) / 2;
+    }
+
+    if (textAlign === "right" || textAlign === "end") {
+      return rect.x + rect.width - lineWidth;
+    }
+
+    return rect.x;
+  }
+
   function pathDataForText(font, text, fontSize, letterSpacing, baselineY) {
     var currentX = 0;
     var pathData = [];
@@ -159,6 +245,8 @@
     var baselineY;
     var transform;
     var textAdvance;
+    var lineHeight;
+    var lines;
 
     if (!text.trim()) {
       return;
@@ -189,14 +277,23 @@
       return;
     }
 
-    baselineY = rect.y + rect.height * 0.78;
-    pathData = pathDataForText(font, text, fontSize, letterSpacing, baselineY);
-    path = appendNode(parent, "path", {
-      d: pathData,
-      fill: fill,
-      transform: "translate(" + rect.x + " 0)"
+    lineHeight = getLineHeight(computedStyle, fontSize);
+    lines = wrapText(text, function (value) {
+      return getTextAdvance(font, value, fontSize, letterSpacing);
+    }, rect.width);
+
+    lines.forEach(function (line, index) {
+      var lineWidth = getTextAdvance(font, line, fontSize, letterSpacing);
+
+      baselineY = rect.y + fontSize * 0.78 + index * lineHeight;
+      pathData = pathDataForText(font, line, fontSize, letterSpacing, baselineY);
+      path = appendNode(parent, "path", {
+        d: pathData,
+        fill: fill,
+        transform: "translate(" + getAlignedLineX(rect, lineWidth, computedStyle) + " 0)"
+      });
+      path.setAttribute("data-export-text", line);
     });
-    path.setAttribute("data-export-text", text);
   }
 
   function resolvePaintValue(value) {
