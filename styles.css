@@ -262,11 +262,14 @@ body {
 }
 
 .control-hint {
-  min-height: 18px;
   margin: 0;
   font-size: 12px;
   line-height: 1.5;
   color: #666;
+}
+
+.control-hint:empty {
+  display: none;
 }
 
 .control-hint.error {
@@ -305,7 +308,6 @@ body {
 /* ---------- Footer ---------- */
 
 .controls-footer {
-  margin-top: 20px;
   padding-top: 16px;
   border-top: 1px solid #e5e5e5;
 }
