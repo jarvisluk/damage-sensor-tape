@@ -273,34 +273,6 @@ body {
   color: #b42318;
 }
 
-.external-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 14px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background: #fafafa;
-  color: #111;
-  font-size: 13px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background 0.15s, border-color 0.15s, transform 0.1s;
-}
-
-.external-link:hover {
-  background: #f0f0f0;
-  border-color: #cfcfcf;
-}
-
-.external-link:active {
-  transform: scale(0.98);
-}
-
-.external-link:focus-visible {
-  outline: 2px solid var(--tape-color);
-  outline-offset: 2px;
-}
 
 /* ---------- Tape Color Picker ---------- */
 
@@ -328,6 +300,45 @@ body {
 .color-swatch.active {
   border-color: #111;
   box-shadow: 0 0 0 2px #fff, 0 0 0 4px #111;
+}
+
+/* ---------- Footer ---------- */
+
+.controls-footer {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e5e5;
+}
+
+.footer-link,
+.github-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  color: #888;
+  transition: color 150ms ease;
+}
+
+.footer-link:hover,
+.footer-link:focus-visible,
+.github-link:hover,
+.github-link:focus-visible {
+  color: #333;
+}
+
+.footer-link:focus-visible,
+.github-link:focus-visible {
+  outline: none;
+}
+
+.footer-link-icon,
+.github-icon {
+  flex: 0 0 auto;
 }
 
 /* ---------- Responsive ---------- */
